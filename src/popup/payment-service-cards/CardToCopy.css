@@ -1,0 +1,21 @@
+.CardToCopy__clipboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.CardToCopy__left-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 55px;
+}
+
+.CardToCopy__payment-service-logo {
+  position: absolute;
+  left: 10px;
+}
+
+.CardToCopy__copy-card-icon {
+  position: absolute;
+  left: 35px;
+}

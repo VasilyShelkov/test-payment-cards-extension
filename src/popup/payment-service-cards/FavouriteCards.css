@@ -1,0 +1,11 @@
+.Favourites {
+  padding-top: 10px;
+}
+
+.Favourites__list_subheader {
+  background-color: whitesmoke !important;
+}
+
+.Favourites__none {
+  padding-left: 10px;
+}
