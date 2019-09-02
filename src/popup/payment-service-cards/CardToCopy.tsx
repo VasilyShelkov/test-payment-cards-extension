@@ -68,6 +68,8 @@ class CardToCopy extends React.Component<Props, State> {
     return (
       <ListItem
         button={true}
+        dense={true}
+        disableGutters={true}
         onMouseEnter={() => this.setState({ isHovering: true })}
         onMouseLeave={() => this.setState({ isHovering: false })}
       >
@@ -83,23 +85,27 @@ class CardToCopy extends React.Component<Props, State> {
             });
           }}
         >
-          <div className="CardToCopy__left-icon">
-            {paymentService === "stripe" && (
-              <Zoom in={!isHovering && !copied}>
-                <img
-                  className="CardToCopy__payment-service-logo"
-                  src="payment-service-logos/stripe-logo.svg"
-                  width="75"
-                  alt="stripe"
-                />
+          <ListItemIcon className="CardToCopy__left-icon">
+            <>
+              {paymentService === "stripe" && (
+                <Zoom in={!isHovering && !copied}>
+                  <img
+                    src="payment-service-logos/stripe-logo.svg"
+                    width="55"
+                    alt="stripe"
+                  />
+                </Zoom>
+              )}
+              <Zoom in={isHovering || copied}>
+                {copied ? (
+                  <Done className="CardToCopy__copy-success-icon" />
+                ) : (
+                  <ContentCopy className="CardToCopy__copy-card-icon" />
+                )}
               </Zoom>
-            )}
-            <Zoom in={isHovering || copied}>
-              <ListItemIcon className="CardToCopy__copy-card-icon">
-                {copied ? <Done style={{ color: "green" }} /> : <ContentCopy />}
-              </ListItemIcon>
-            </Zoom>
-          </div>
+            </>
+          </ListItemIcon>
+
           <ListItemText
             primary={copied ? "Copied" : formatCardNumber(cardDetails.cardNum)}
             secondary={cardDetails.description}
@@ -110,7 +116,7 @@ class CardToCopy extends React.Component<Props, State> {
           <ListItemSecondaryAction>
             <IconButton
               aria-label="Favourite"
-              onClick={event => {
+              onClick={() => {
                 addToFavourites(cardDetails);
               }}
             >

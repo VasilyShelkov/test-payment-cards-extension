@@ -43,7 +43,7 @@ export const CardsList: React.StatelessComponent<
     <div className="CardsList__header">
       <Button
         onClick={() => history.goBack()}
-        variant="flat"
+        variant="text"
         size="small"
         color="secondary"
       >

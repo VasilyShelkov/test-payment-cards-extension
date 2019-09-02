@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "0.0.1",
+  "version": "0.0.3",
   "short_name": "Test Cards",
   "name": "Test Payment Cards Extension",
   "description": "An extension which allows you to easily use test cards in your test environments",
@@ -22,5 +22,10 @@
     "48": "img/icon-48.png",
     "128": "img/icon-128.png"
   },
-  "permissions": ["activeTab", "storage"]
+  "permissions": ["activeTab", "storage"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{65e84d93-d4de-4e85-837a-064f7eb90f2b}"
+    }
+  }
 }

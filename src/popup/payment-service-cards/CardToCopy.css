@@ -6,16 +6,15 @@
 
 .CardToCopy__left-icon {
   display: flex;
+  justify-content: center;
   align-items: center;
-  margin-right: 55px;
 }
 
-.CardToCopy__payment-service-logo {
+.CardToCopy__copy-success-icon {
+  color: green;
   position: absolute;
-  left: 10px;
 }
 
 .CardToCopy__copy-card-icon {
   position: absolute;
-  left: 35px;
 }
