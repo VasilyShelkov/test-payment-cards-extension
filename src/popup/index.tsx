@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MemoryRouter as Router, Route } from "react-router-dom";
+import { Router, Redirect } from "@reach/router";
 
 import PaymentServiesTabs from "./PaymentServicesTabs";
 import PaymentServiceCards from "./payment-service-cards";
@@ -8,12 +8,11 @@ import "./index.css";
 
 export default () => (
   <div className="App">
-    <Router initialEntries={["/favourites"]}>
-      <>
-        <Route path="/(favourites|stripe)" component={PaymentServiesTabs} />
-        <Route path="/favourites" component={FavouriteCards} />
-        <Route path="/stripe" component={PaymentServiceCards} />
-      </>
+    <PaymentServiesTabs />
+    <Router>
+      <Redirect from="/popup.html" to="/" />
+      <FavouriteCards path="/" />
+      <PaymentServiceCards path="/stripe/*" />
     </Router>
   </div>
 );

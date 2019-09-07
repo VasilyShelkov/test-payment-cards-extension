@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "@reach/router";
 import { connect } from "react-redux";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
@@ -11,7 +11,7 @@ import { CardFavourite } from "../../CardModel";
 import CardToCopy from "./CardToCopy";
 import "./FavouriteCards.css";
 
-interface Props extends RouteComponentProps<{}> {
+interface Props extends RouteComponentProps {
   recentlyCopiedCards: CardFavourite[];
   favouriteCards: CardFavourite[];
   addToFavourites: typeof favouritesActions.addFavourite;
@@ -23,55 +23,56 @@ export const FavouriteCards: React.StatelessComponent<Props> = ({
   favouriteCards,
   addToFavourites,
   removeFromFavourites,
-  addCopiedCardToRecents,
-  ...props
+  addCopiedCardToRecents
 }) => (
-  <List className="Favourites">
-    <ListSubheader className="Favourites__list_subheader">
-      {recentlyCopiedCards.length} Recently Copied cards
-    </ListSubheader>
-    {recentlyCopiedCards.length ? (
-      recentlyCopiedCards.map((cardDetails: CardFavourite, index) => (
-        <CardToCopy
-          key={`${index}-${cardDetails.cardNum}`}
-          isFavourite={Boolean(
-            favouriteCards.find(
-              ({ cardNum }) => cardDetails.cardNum === cardNum
-            )
-          )}
-          addToFavourites={addToFavourites}
-          removeFromFavourites={removeFromFavourites}
-          service="stripe"
-          {...cardDetails}
-        />
-      ))
-    ) : (
-      <Typography variant="body2" className="Favourites__none">
-        You haven't copied any cards recently
-      </Typography>
-    )}
+  <div style={{ maxHeight: "calc(100vh - 57px)", overflow: "scroll" }}>
+    <List className="Favourites">
+      <ListSubheader className="Favourites__list_subheader">
+        {recentlyCopiedCards.length} Recently Copied cards
+      </ListSubheader>
+      {recentlyCopiedCards.length ? (
+        recentlyCopiedCards.map((cardDetails: CardFavourite, index) => (
+          <CardToCopy
+            key={`${index}-${cardDetails.cardNum}`}
+            isFavourite={Boolean(
+              favouriteCards.find(
+                ({ cardNum }) => cardDetails.cardNum === cardNum
+              )
+            )}
+            addToFavourites={addToFavourites}
+            removeFromFavourites={removeFromFavourites}
+            service="stripe"
+            {...cardDetails}
+          />
+        ))
+      ) : (
+        <Typography variant="body2" className="Favourites__none">
+          You haven't copied any cards recently
+        </Typography>
+      )}
 
-    <ListSubheader className="Favourites__list_subheader">
-      {favouriteCards.length} Favourites
-    </ListSubheader>
-    {favouriteCards.length ? (
-      favouriteCards.map((cardDetails: CardFavourite, index) => (
-        <CardToCopy
-          key={`${index}-${cardDetails.cardNum}`}
-          isFavourite={true}
-          favouritedIcon="delete"
-          removeFromFavourites={removeFromFavourites}
-          addCopiedCardToRecents={addCopiedCardToRecents}
-          service="stripe"
-          {...cardDetails}
-        />
-      ))
-    ) : (
-      <Typography variant="body2" className="Favourites__none">
-        You have no favourites yet
-      </Typography>
-    )}
-  </List>
+      <ListSubheader className="Favourites__list_subheader">
+        {favouriteCards.length} Favourites
+      </ListSubheader>
+      {favouriteCards.length ? (
+        favouriteCards.map((cardDetails: CardFavourite, index) => (
+          <CardToCopy
+            key={`${index}-${cardDetails.cardNum}`}
+            isFavourite={true}
+            favouritedIcon="delete"
+            removeFromFavourites={removeFromFavourites}
+            addCopiedCardToRecents={addCopiedCardToRecents}
+            service="stripe"
+            {...cardDetails}
+          />
+        ))
+      ) : (
+        <Typography variant="body2" className="Favourites__none">
+          You have no favourites yet
+        </Typography>
+      )}
+    </List>
+  </div>
 );
 
 const mapStateToProps = (state: RootState) => ({

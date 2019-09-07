@@ -6,10 +6,12 @@
   "dependencies": {
     "@material-ui/core": "^4.3.4",
     "@material-ui/icons": "^4.2.1",
+    "@reach/router": "^1.2.1",
     "@types/axios": "^0.14.0",
     "@types/chrome": "^0.0.59",
     "@types/clipboard": "^2.0.0",
     "@types/node": "12.7.3",
+    "@types/reach__router": "^1.2.4",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.9.0",
     "@types/react-redux": "^5.0.15",
@@ -20,10 +22,9 @@
     "react-browser-extension-scripts": "0.1.0",
     "react-chrome-redux": "^1.5.1",
     "react-clipboard.js": "^2.0.13",
+    "react-devtools": "^3.6.3",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.1",
-    "react-router-dom": "^5.0.1",
-    "react-router-transition": "^1.2.1",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.0.1",
@@ -45,7 +46,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "precommit": "lint-staged && CI=true yarn test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "react-devtools": "react-devtools"
   },
   "husky": {
     "hooks": {

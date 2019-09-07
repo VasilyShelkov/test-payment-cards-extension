@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "@reach/router";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -11,11 +11,11 @@ import Flag from "@material-ui/icons/Flag";
 import Security from "@material-ui/icons/Security";
 
 const PaymentServicesTabs: React.StatelessComponent<
-  RouteComponentProps<{}>
-> = ({ match }) => (
+  RouteComponentProps
+> = () => (
   <List component="nav">
     <ListItem
-      component={props => <Link {...props} to={`${match.url}/responses`} />}
+      component={props => <Link {...props} to="responses" />}
       button={true}
     >
       <ListItemIcon>
@@ -26,7 +26,7 @@ const PaymentServicesTabs: React.StatelessComponent<
     </ListItem>
 
     <ListItem
-      component={props => <Link {...props} to={`${match.url}/card-types`} />}
+      component={props => <Link {...props} to="card-types" />}
       button={true}
     >
       <ListItemIcon>
@@ -37,9 +37,7 @@ const PaymentServicesTabs: React.StatelessComponent<
     </ListItem>
 
     <ListItem
-      component={props => (
-        <Link {...props} to={`${match.url}/international-cards`} />
-      )}
+      component={props => <Link {...props} to="international-cards" />}
       button={true}
     >
       <ListItemIcon>
@@ -50,7 +48,7 @@ const PaymentServicesTabs: React.StatelessComponent<
     </ListItem>
 
     <ListItem
-      component={props => <Link {...props} to={`${match.url}/3ds-cards`} />}
+      component={props => <Link {...props} to="3ds-cards" />}
       button={true}
     >
       <ListItemIcon>

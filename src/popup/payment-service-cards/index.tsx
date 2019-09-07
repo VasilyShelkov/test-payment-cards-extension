@@ -1,8 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import axios, { AxiosResponse } from "axios";
-import { AnimatedSwitch, AnimatedRoute } from "react-router-transition";
-import { Route, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Router } from "@reach/router";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { RootState } from "typesafe-actions";
 
@@ -11,15 +10,12 @@ import CardTypeChooser from "./CardTypeChooser";
 import CardsList from "./CardsList";
 import CardsApiResponse from "./CardsApiResponse";
 
-interface Props extends RouteComponentProps<{}> {
+interface Props extends RouteComponentProps {
   addApiResponseToClientCache: typeof cacheActions.cacheResponse;
   cardsApiResponse: CardsApiResponse;
 }
 interface State {
   loading: boolean;
-}
-interface AnimationProps {
-  offset: number;
 }
 export class PaymentServiceCards extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -43,7 +39,7 @@ export class PaymentServiceCards extends React.Component<Props, State> {
   }
 
   render() {
-    const { match, cardsApiResponse } = this.props;
+    const { cardsApiResponse } = this.props;
     const { loading } = this.state;
 
     if (loading) {
@@ -62,84 +58,42 @@ export class PaymentServiceCards extends React.Component<Props, State> {
     }
 
     return (
-      <div style={{ position: "relative" }}>
-        <AnimatedRoute
-          exact={true}
-          path={match.path}
-          component={CardTypeChooser}
-          atEnter={{ offset: -100 }}
-          atLeave={{ offset: -100 }}
-          atActive={{ offset: 0 }}
-          mapStyles={(animationStyles: AnimationProps) => ({
-            transform: `translateX(${animationStyles.offset}%)`,
-            position: "absolute",
-            top: "0",
-            width: "100%"
-          })}
-        />
-        <AnimatedSwitch
-          atEnter={{ offset: 100 }}
-          atLeave={{ offset: 100 }}
-          atActive={{ offset: 0 }}
-          mapStyles={(animationStyles: AnimationProps) => ({
-            transform: `translateX(${animationStyles.offset}%)`
-          })}
-        >
+      <>
+        <Router>
+          <CardTypeChooser path="/" />
           {cardsApiResponse.cardResponses && (
-            <Route
-              path={`${match.path}/responses`}
-              render={props => (
-                <CardsList
-                  {...props}
-                  listTitle="HTTP RESPONSES"
-                  cards={cardsApiResponse && cardsApiResponse.cardResponses}
-                />
-              )}
+            <CardsList
+              path="/responses"
+              listTitle="HTTP RESPONSES"
+              cards={cardsApiResponse && cardsApiResponse.cardResponses}
             />
           )}
 
           {cardsApiResponse.cardTypes && (
-            <Route
-              path={`${match.path}/card-types`}
-              render={props => (
-                <CardsList
-                  {...props}
-                  listTitle="CARD TYPES"
-                  cards={cardsApiResponse && cardsApiResponse.cardTypes}
-                />
-              )}
+            <CardsList
+              path="/card-types"
+              listTitle="CARD TYPES"
+              cards={cardsApiResponse && cardsApiResponse.cardTypes}
             />
           )}
 
           {cardsApiResponse.internationalCards && (
-            <Route
-              path={`${match.path}/international-cards`}
-              render={props => (
-                <CardsList
-                  {...props}
-                  listTitle="INTERNATIONAL CARDS"
-                  cards={
-                    cardsApiResponse && cardsApiResponse.internationalCards
-                  }
-                />
-              )}
+            <CardsList
+              path="/international-cards"
+              listTitle="INTERNATIONAL CARDS"
+              cards={cardsApiResponse && cardsApiResponse.internationalCards}
             />
           )}
 
           {cardsApiResponse && cardsApiResponse["3dsCards"] && (
-            <Route
-              path={`${match.url}/3ds-cards`}
-              render={props => (
-                <CardsList
-                  {...props}
-                  listTitle="3DS CARDS"
-                  cards={cardsApiResponse && cardsApiResponse["3dsCards"]}
-                />
-              )}
+            <CardsList
+              path="/3ds-cards"
+              listTitle="3DS CARDS"
+              cards={cardsApiResponse && cardsApiResponse["3dsCards"]}
             />
           )}
-        </AnimatedSwitch>
-      </div>
+        </Router>
+      </>
     );
   }
 }

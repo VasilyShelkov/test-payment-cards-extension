@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "@reach/router";
 import { RootState } from "typesafe-actions";
 
 import List from "@material-ui/core/List";
@@ -15,7 +15,7 @@ import * as favouritesActions from "../../store/favouritesActions";
 
 import "./CardsList.css";
 
-interface Props {
+interface Props extends RouteComponentProps {
   cards?: Card[] | undefined;
   listTitle: string;
   addToFavourites: typeof favouritesActions.addFavourite;
@@ -23,21 +23,19 @@ interface Props {
   addCopiedCardToRecents: typeof favouritesActions.addRecentlyCopied;
   favourites: CardFavourite[];
 }
-export const CardsList: React.StatelessComponent<
-  RouteComponentProps<{}> & Props
-> = ({
+export const CardsList: React.StatelessComponent<Props> = ({
   addToFavourites,
   removeFromFavourites,
   addCopiedCardToRecents,
-  history,
   cards,
   listTitle,
-  favourites
+  favourites,
+  navigate
 }) => (
   <List>
     <div className="CardsList__header">
       <Button
-        onClick={() => history.goBack()}
+        onClick={() => navigate && navigate("../")}
         variant="text"
         size="small"
         color="secondary"
@@ -48,20 +46,22 @@ export const CardsList: React.StatelessComponent<
       <ListSubheader>{listTitle}</ListSubheader>
     </div>
     <Divider />
-    {cards &&
-      cards.map((cardDetails: Card, index) => (
-        <CardToCopy
-          key={`${index}-${cardDetails.cardNum}`}
-          addToFavourites={addToFavourites}
-          removeFromFavourites={removeFromFavourites}
-          addCopiedCardToRecents={addCopiedCardToRecents}
-          isFavourite={Boolean(
-            favourites.find(({ cardNum }) => cardDetails.cardNum === cardNum)
-          )}
-          {...cardDetails}
-          service="stripe"
-        />
-      ))}
+    <div style={{ maxHeight: "calc(100vh - 114px)", overflow: "scroll" }}>
+      {cards &&
+        cards.map((cardDetails: Card, index) => (
+          <CardToCopy
+            key={`${index}-${cardDetails.cardNum}`}
+            addToFavourites={addToFavourites}
+            removeFromFavourites={removeFromFavourites}
+            addCopiedCardToRecents={addCopiedCardToRecents}
+            isFavourite={Boolean(
+              favourites.find(({ cardNum }) => cardDetails.cardNum === cardNum)
+            )}
+            {...cardDetails}
+            service="stripe"
+          />
+        ))}
+    </div>
   </List>
 );
 
