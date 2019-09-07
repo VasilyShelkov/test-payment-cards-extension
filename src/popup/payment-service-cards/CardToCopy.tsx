@@ -29,118 +29,98 @@ interface Props {
   isFavourite: boolean;
   favouritedIcon?: "star" | "delete";
 }
-interface State {
-  copied: boolean;
-  isHovering: boolean;
-}
-class CardToCopy extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      copied: false,
-      isHovering: false
-    };
-  }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (this.state.copied) {
-      setTimeout(() => this.setState({ copied: false }), 3000);
+const CardToCopy = ({
+  paymentService,
+  addToFavourites,
+  removeFromFavourites,
+  addCopiedCardToRecents,
+  isFavourite,
+  favouritedIcon = "star",
+  ...cardDetails
+}: Props) => {
+  const [copied, setCopied] = React.useState(false);
+  const [isHovering, setHovering] = React.useState(false);
+
+  React.useEffect(() => {
+    if (copied) {
+      setTimeout(() => setCopied(false), 3000);
     }
-  }
+  });
 
-  toggleShowClipboardIcon = (newState: boolean) => {
-    this.setState({
-      isHovering: newState
-    });
-  };
-
-  render() {
-    const {
-      paymentService,
-      addToFavourites,
-      removeFromFavourites,
-      addCopiedCardToRecents,
-      isFavourite,
-      favouritedIcon = "star",
-      ...cardDetails
-    } = this.props;
-    const { copied, isHovering } = this.state;
-    return (
-      <ListItem
-        button={true}
-        dense={true}
-        disableGutters={true}
-        onMouseEnter={() => this.setState({ isHovering: true })}
-        onMouseLeave={() => this.setState({ isHovering: false })}
+  return (
+    <ListItem
+      button={true}
+      dense={true}
+      disableGutters={true}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
+      <Clipboard
+        component="div"
+        className="CardToCopy__clipboard"
+        data-clipboard-text={cardDetails.cardNum}
+        onSuccess={() => {
+          // tslint:disable-next-line:no-unused-expression
+          addCopiedCardToRecents && addCopiedCardToRecents(cardDetails);
+          setCopied(true);
+        }}
       >
-        <Clipboard
-          component="div"
-          className="CardToCopy__clipboard"
-          data-clipboard-text={cardDetails.cardNum}
-          onSuccess={() => {
-            // tslint:disable-next-line:no-unused-expression
-            addCopiedCardToRecents && addCopiedCardToRecents(cardDetails);
-            this.setState({
-              copied: true
-            });
-          }}
-        >
-          <ListItemIcon className="CardToCopy__left-icon">
-            <>
-              {paymentService === "stripe" && (
-                <Zoom in={!isHovering && !copied}>
-                  <img
-                    src="payment-service-logos/stripe-logo.svg"
-                    width="55"
-                    alt="stripe"
-                  />
-                </Zoom>
-              )}
-              <Zoom in={isHovering || copied}>
-                {copied ? (
-                  <Done className="CardToCopy__copy-success-icon" />
-                ) : (
-                  <ContentCopy className="CardToCopy__copy-card-icon" />
-                )}
+        <ListItemIcon className="CardToCopy__left-icon">
+          <>
+            {paymentService === "stripe" && (
+              <Zoom in={!isHovering && !copied}>
+                <img
+                  src="payment-service-logos/stripe-logo.svg"
+                  width="55"
+                  alt="stripe"
+                />
               </Zoom>
-            </>
-          </ListItemIcon>
+            )}
+            <Zoom in={isHovering || copied}>
+              {copied ? (
+                <Done className="CardToCopy__copy-success-icon" />
+              ) : (
+                <ContentCopy className="CardToCopy__copy-card-icon" />
+              )}
+            </Zoom>
+          </>
+        </ListItemIcon>
 
-          <ListItemText
-            primary={copied ? "Copied" : formatCardNumber(cardDetails.cardNum)}
-            secondary={cardDetails.description}
-          />
-        </Clipboard>
+        <ListItemText
+          primary={copied ? "Copied" : formatCardNumber(cardDetails.cardNum)}
+          secondary={cardDetails.description}
+        />
+      </Clipboard>
 
-        {addToFavourites && !isFavourite && (
-          <ListItemSecondaryAction>
-            <IconButton
-              aria-label="Favourite"
-              onClick={() => {
-                addToFavourites(cardDetails);
-              }}
-            >
-              <StarBorder />
-            </IconButton>
-          </ListItemSecondaryAction>
-        )}
+      {addToFavourites && !isFavourite && (
+        <ListItemSecondaryAction>
+          <IconButton
+            aria-label="Favourite"
+            onClick={() => {
+              addToFavourites(cardDetails);
+            }}
+          >
+            <StarBorder />
+          </IconButton>
+        </ListItemSecondaryAction>
+      )}
 
-        {removeFromFavourites && isFavourite && (
-          <ListItemSecondaryAction>
-            <IconButton
-              aria-label="Favourite"
-              color="secondary"
-              onClick={event => {
-                removeFromFavourites(cardDetails.cardNum);
-              }}
-            >
-              {favouritedIcon === "delete" ? <Delete /> : <Star />}
-            </IconButton>
-          </ListItemSecondaryAction>
-        )}
-      </ListItem>
-    );
-  }
-}
+      {removeFromFavourites && isFavourite && (
+        <ListItemSecondaryAction>
+          <IconButton
+            aria-label="Favourite"
+            color="secondary"
+            onClick={event => {
+              removeFromFavourites(cardDetails.cardNum);
+            }}
+          >
+            {favouritedIcon === "delete" ? <Delete /> : <Star />}
+          </IconButton>
+        </ListItemSecondaryAction>
+      )}
+    </ListItem>
+  );
+};
 
 export default CardToCopy;
