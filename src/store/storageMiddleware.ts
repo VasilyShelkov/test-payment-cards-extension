@@ -1,5 +1,5 @@
 import { Store, Dispatch } from "redux";
-import { RootState } from "./rootReducer";
+import { RootState } from "typesafe-actions";
 
 const saveState = (state: any) => {
   chrome.storage.local.set({ state: JSON.stringify(state) });

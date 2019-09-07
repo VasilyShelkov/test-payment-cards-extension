@@ -13,7 +13,7 @@ import Star from "@material-ui/icons/Star";
 import Delete from "@material-ui/icons/Delete";
 import Zoom from "@material-ui/core/Zoom";
 
-import { Card } from "../../CardModel";
+import * as favouritesActions from "../../store/favouritesActions";
 import "./CardToCopy.css";
 
 const formatCardNumber = (cardNumber: string) =>
@@ -23,11 +23,12 @@ interface Props {
   cardNum: string;
   description: string;
   paymentService?: string;
-  addToFavourites?: (newFavouriteCard: Card) => void;
-  removeFromFavourites?: (cardNumToRemove: string) => any;
-  addCopiedCardToRecents?: (copiedCard: Card) => any;
+  addToFavourites?: typeof favouritesActions.addFavourite;
+  removeFromFavourites?: typeof favouritesActions.removeFavourite;
+  addCopiedCardToRecents?: typeof favouritesActions.addRecentlyCopied;
   isFavourite: boolean;
   favouritedIcon?: "star" | "delete";
+  service: "stripe";
 }
 
 const CardToCopy = ({
@@ -37,6 +38,7 @@ const CardToCopy = ({
   addCopiedCardToRecents,
   isFavourite,
   favouritedIcon = "star",
+  service,
   ...cardDetails
 }: Props) => {
   const [copied, setCopied] = React.useState(false);
@@ -62,7 +64,8 @@ const CardToCopy = ({
         data-clipboard-text={cardDetails.cardNum}
         onSuccess={() => {
           // tslint:disable-next-line:no-unused-expression
-          addCopiedCardToRecents && addCopiedCardToRecents(cardDetails);
+          addCopiedCardToRecents &&
+            addCopiedCardToRecents(cardDetails, service);
           setCopied(true);
         }}
       >
@@ -98,7 +101,7 @@ const CardToCopy = ({
           <IconButton
             aria-label="Favourite"
             onClick={() => {
-              addToFavourites(cardDetails);
+              addToFavourites(cardDetails, service);
             }}
           >
             <StarBorder />
@@ -112,7 +115,7 @@ const CardToCopy = ({
             aria-label="Favourite"
             color="secondary"
             onClick={event => {
-              removeFromFavourites(cardDetails.cardNum);
+              removeFromFavourites(cardDetails.cardNum, service);
             }}
           >
             {favouritedIcon === "delete" ? <Delete /> : <Star />}

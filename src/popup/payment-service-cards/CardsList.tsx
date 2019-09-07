@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
+import { RootState } from "typesafe-actions";
 
 import List from "@material-ui/core/List";
 import ListSubheader from "@material-ui/core/ListSubheader";
@@ -11,21 +11,16 @@ import Divider from "@material-ui/core/Divider";
 
 import { Card, CardFavourite } from "../../CardModel";
 import CardToCopy from "./CardToCopy";
-import {
-  addFavourite,
-  removeFavourite,
-  addRecentlyCopied
-} from "../../store/favouritesActions";
-import { RootState } from "../../store/rootReducer";
+import * as favouritesActions from "../../store/favouritesActions";
 
 import "./CardsList.css";
 
 interface Props {
   cards?: Card[] | undefined;
   listTitle: string;
-  addToFavourites: (newFavouriteCard: Card) => any;
-  removeFromFavourites: (cardNumToRemove: string) => any;
-  addCopiedCardToRecents: (copiedCard: Card) => any;
+  addToFavourites: typeof favouritesActions.addFavourite;
+  removeFromFavourites: typeof favouritesActions.removeFavourite;
+  addCopiedCardToRecents: typeof favouritesActions.addRecentlyCopied;
   favourites: CardFavourite[];
 }
 export const CardsList: React.StatelessComponent<
@@ -64,23 +59,21 @@ export const CardsList: React.StatelessComponent<
             favourites.find(({ cardNum }) => cardDetails.cardNum === cardNum)
           )}
           {...cardDetails}
+          service="stripe"
         />
       ))}
   </List>
 );
 
-const mapDispatchProps = (dispatch: Dispatch<{}>) => ({
-  addToFavourites: (newFavouriteCard: Card) =>
-    dispatch(addFavourite(newFavouriteCard, "stripe")),
-  removeFromFavourites: (cardNum: string) =>
-    dispatch(removeFavourite(cardNum, "stripe")),
-  addCopiedCardToRecents: (copiedCard: Card) =>
-    dispatch(addRecentlyCopied(copiedCard, "stripe"))
-});
+const dispatchProps = {
+  addToFavourites: favouritesActions.addFavourite,
+  removeFromFavourites: favouritesActions.removeFavourite,
+  addCopiedCardToRecents: favouritesActions.addRecentlyCopied
+};
 const mapStateToProps = (state: RootState) => ({
   favourites: state.favourites.cards
 });
 export default connect(
   mapStateToProps,
-  mapDispatchProps
+  dispatchProps
 )(CardsList);

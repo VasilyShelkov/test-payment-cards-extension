@@ -1,19 +1,18 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
 import axios, { AxiosResponse } from "axios";
 import { AnimatedSwitch, AnimatedRoute } from "react-router-transition";
 import { Route, RouteComponentProps } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { RootState } from "typesafe-actions";
 
-import { cacheResponse } from "../../store/cacheActions";
+import * as cacheActions from "../../store/cacheActions";
 import CardTypeChooser from "./CardTypeChooser";
 import CardsList from "./CardsList";
 import CardsApiResponse from "./CardsApiResponse";
-import { RootState } from "../../store/rootReducer";
 
 interface Props extends RouteComponentProps<{}> {
-  addApiResponseToClientCache: (apiResponse: CardsApiResponse) => void;
+  addApiResponseToClientCache: typeof cacheActions.cacheResponse;
   cardsApiResponse: CardsApiResponse;
 }
 interface State {
@@ -35,7 +34,7 @@ export class PaymentServiceCards extends React.Component<Props, State> {
       axios
         .get("http://localhost:8000/scrape-payment-service-test-cards")
         .then((response: AxiosResponse) => {
-          this.props.addApiResponseToClientCache(response.data);
+          this.props.addApiResponseToClientCache(response.data, "stripe");
           this.setState({
             loading: false
           });
@@ -145,15 +144,13 @@ export class PaymentServiceCards extends React.Component<Props, State> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<{}>) => ({
-  addApiResponseToClientCache: (apiResponse: CardsApiResponse) => {
-    dispatch(cacheResponse(apiResponse, "stripe"));
-  }
-});
+const dispatchProps = {
+  addApiResponseToClientCache: cacheActions.cacheResponse
+};
 const mapStateToProps = (state: RootState) => ({
   cardsApiResponse: state.cache.stripe
 });
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  dispatchProps
 )(PaymentServiceCards);

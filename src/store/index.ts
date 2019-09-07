@@ -1,8 +1,9 @@
 import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
-import storage from "./storageMiddleware";
+import { RootState } from "typesafe-actions";
 
-import rootReducer, { RootState } from "./rootReducer";
+import storage from "./storageMiddleware";
+import rootReducer from "./rootReducer";
 
 export default (initialState: RootState) => {
   return createStore(
