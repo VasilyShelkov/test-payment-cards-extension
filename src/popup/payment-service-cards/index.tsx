@@ -1,29 +1,25 @@
 import * as React from "react";
 import useAxios from "@use-hooks/axios";
-import { connect } from "react-redux";
-import { RouteComponentProps, Router } from "@reach/router";
+import { useSelector, useDispatch } from "react-redux";
+import { Router, RouteComponentProps } from "@reach/router";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { RootState } from "typesafe-actions";
 
 import * as cacheActions from "../../store/cacheActions";
 import CardTypeChooser from "./CardTypeChooser";
 import CardsList from "./CardsList";
-import CardsApiResponse from "./CardsApiResponse";
+import { RootState } from "typesafe-actions";
 
-interface Props extends RouteComponentProps {
-  addApiResponseToClientCache: typeof cacheActions.cacheResponse;
-  cardsApiResponse: CardsApiResponse;
-}
-const PaymentServiceCards = ({
-  cardsApiResponse,
-  addApiResponseToClientCache
-}: Props) => {
+const PaymentServiceCards: React.FC<RouteComponentProps> = () => {
+  const cardsApiResponse = useSelector(
+    (state: RootState) => state.cache.stripe
+  );
+  const dispatch = useDispatch();
   const { loading } = useAxios({
     url: `http://localhost:8000/scrape-payment-service-test-cards`,
     method: "GET",
     filter: () => !cardsApiResponse,
     customHandler: (error, response) =>
-      response && addApiResponseToClientCache(response.data, "stripe")
+      response && dispatch(cacheActions.cacheResponse(response.data, "stripe"))
   });
 
   if (loading) {
@@ -81,13 +77,4 @@ const PaymentServiceCards = ({
   );
 };
 
-const dispatchProps = {
-  addApiResponseToClientCache: cacheActions.cacheResponse
-};
-const mapStateToProps = (state: RootState) => ({
-  cardsApiResponse: state.cache.stripe
-});
-export default connect(
-  mapStateToProps,
-  dispatchProps
-)(PaymentServiceCards);
+export default PaymentServiceCards;

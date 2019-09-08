@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Store } from "react-chrome-redux";
+import { Store } from "webext-redux";
 import { Provider } from "react-redux";
 
 import Root from "./popup";

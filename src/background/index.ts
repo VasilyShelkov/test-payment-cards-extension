@@ -1,4 +1,4 @@
-import { wrapStore } from "react-chrome-redux";
+import { wrapStore } from "webext-redux";
 
 import createStore from "../store";
 
